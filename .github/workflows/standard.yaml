@@ -29,7 +29,8 @@ jobs:
       - name: News fragment
         run: |
           COMMIT_MESSAGE=$(git log -1 --pretty=%s)
-          if [[ "$COMMIT_MESSAGE" =~ ^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:[[:space:]]+.+$ ]]; then
+          COMMIT_PATTERN='^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:[[:space:]]+.+$'
+          if [[ "$COMMIT_MESSAGE" =~ $COMMIT_PATTERN ]]; then
             CATEGORY="${BASH_REMATCH[1]}"
             if [ "$CATEGORY" = "feat" ]; then
               npm run release:minor -- --no-git.requireUpstream --no-git.commit --no-git.tag --no-git.push --no-github.release
