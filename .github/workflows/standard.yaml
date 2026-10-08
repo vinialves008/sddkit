@@ -28,14 +28,13 @@ jobs:
         run: npm ci
       - name: News fragment
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          CATEGORY=$(echo "$COMMIT_MESSAGE" | grep -Ei '^(feat|fix|docs|style|refactor|perf|test|chore)' | awk -F: '{print $1}' | tr -d '[:space:]')
-          MESSAGE=$(echo "$COMMIT_MESSAGE" | sed -E 's/^\[(feat|fix|docs|style|refactor|perf|test|chore)\]//')
-          if [ -n "$CATEGORY" ] && [ -n "$MESSAGE" ]; then
-            if [ "$CATEGORY" -eq "feat" ]; then
-              npm run release:minor
+          COMMIT_MESSAGE=$(git log -1 --pretty=%s)
+          if [[ "$COMMIT_MESSAGE" =~ ^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:[[:space:]]+.+$ ]]; then
+            CATEGORY="${BASH_REMATCH[1]}"
+            if [ "$CATEGORY" = "feat" ]; then
+              npm run release:minor -- --no-git.requireUpstream --no-git.commit --no-git.tag --no-git.push --no-github.release
             else
-              npm run release:patch
+              npm run release:patch -- --no-git.requireUpstream --no-git.commit --no-git.tag --no-git.push --no-github.release
             fi
           else
             echo "No valid category found in commit message. Skipping news fragment creation."
