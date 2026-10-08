@@ -1,0 +1,62 @@
+name: 'Standard'
+
+on: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  cd_prerelease:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event_name == 'push' && !contains(github.event.head_commit.message, '[GRV]') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version-file: .nvmrc
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Create release branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b release/${{ github.run_id }}
+      - name: Install dependencies
+        run: npm ci
+      - name: News fragment
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          CATEGORY=$(echo "$COMMIT_MESSAGE" | grep -oE '^\[(feat|fix|docs|style|refactor|perf|test|chore)\]')
+          MESSAGE=$(echo "$COMMIT_MESSAGE" | sed -E 's/^\[(feat|fix|docs|style|refactor|perf|test|chore)\]//')
+          if [ -n "$CATEGORY" ] && [ -n "$MESSAGE" ]; then
+            if [ "$CATEGORY" -eq "feat" ]; then
+              npm run release:minor
+            else
+              npm run release:patch
+            fi
+          else
+            echo "No valid category found in commit message. Skipping news fragment creation."
+            exit 0
+          fi
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "chore(release): pre-release version bump"
+          git push origin release/${{ github.run_id }}
+      - name: Create Pull Request
+        run: |
+          gh pr create --title "[GRV] Pre-release version bump" --body "This PR contains the pre-release version bump." --base main --head release/${{ github.run_id }}
+  cd_release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event_name == 'push' && contains(github.event.head_commit.message, '[GRV]') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Trigger Publish Workflow
+        run: |
+          gh workflow run publish.yaml --ref main  

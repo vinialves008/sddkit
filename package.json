@@ -1,0 +1,110 @@
+{
+  "name": "sddkit",
+  "version": "0.0.0",
+  "description": "Specification-Driven Development toolkit for AI coding agents",
+  "type": "module",
+  "bin": {
+    "sddkit": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && node scripts/copy-templates.mjs",
+    "dev": "tsx src/cli.ts",
+    "test": "node --test",
+    "prepublishOnly": "npm run build",
+    "release:minor": "release-it --ci --increment=minor --verbose",
+    "release:patch": "release-it --ci --increment=patch --verbose"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@release-it/bumper": "^8.0.1",
+    "@release-it/conventional-changelog": "^12.0.2",
+    "@types/node": "^24.19.1",
+    "news-fragments": "^4.5.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinialves008/sddkit.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
+  "release-it": {
+    "npm": false,
+    "git": {},
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    },
+    "plugins": {
+      "@release-it/bumper": {
+        "out": [
+          {
+            "file": "package.json",
+            "path": "version"
+          }
+        ]
+      },
+      "@release-it/conventional-changelog": {
+        "preset": "conventionalcommits",
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog",
+        "types": [
+          {
+            "type": "feat",
+            "section": "Features"
+          },
+          {
+            "type": "fix",
+            "section": "Bug Fixes"
+          },
+          {
+            "type": "docs",
+            "section": "Documentation"
+          },
+          {
+            "type": "style",
+            "hidden": true
+          },
+          {
+            "type": "refactor",
+            "hidden": true
+          },
+          {
+            "type": "perf",
+            "hidden": true
+          },
+          {
+            "type": "test",
+            "hidden": true
+          },
+          {
+            "type": "chore",
+            "hidden": true
+          }
+        ]
+      },
+      "news-fragments": {}
+    }
+  },
+  "keywords": [],
+  "author": "Vinícius Alves <vinialves08@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vinialves008/sddkit/issues"
+  },
+  "homepage": "https://github.com/vinialves008/sddkit#readme"
+}
