@@ -9,6 +9,9 @@ on:
 jobs:
   cd_prerelease:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     if: ${{ github.event_name == 'push' && github.event_name == 'push' && !contains(github.event.head_commit.message, '[GRV]') }}
     steps:
       - name: Checkout
@@ -47,10 +50,15 @@ jobs:
           git commit -m "chore(release): pre-release version bump"
           git push --set-upstream origin release/${{ github.run_id }}
       - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh pr create --title "[GRV] Pre-release version bump" --body "This PR contains the pre-release version bump." --base main --head release/${{ github.run_id }}
   cd_release:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
     if: ${{ github.event_name == 'push' && github.event_name == 'push' && contains(github.event.head_commit.message, '[GRV]') }}
     steps:
       - name: Checkout
@@ -58,5 +66,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Trigger Publish Workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run publish.yaml --ref main  
