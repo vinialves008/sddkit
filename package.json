@@ -1,6 +1,6 @@
 {
   "name": "sddkit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Specification-Driven Development toolkit for AI coding agents",
   "type": "module",
   "bin": {
