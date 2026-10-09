@@ -2,6 +2,16 @@
 
 ## 0.0.1 (2026-10-09)
 
+[//]: # (s-0.0.1)
+
+# [0.0.1] - (2026-10-09)
+
+[//]: # (e-0.0.1)
+
+
+
+## 0.0.1 (2026-10-09)
+
 ### Bug Fixes
 
 * update publish workflow for improved clarity and structure ([f17ee2a](https://github.com/vinialves008/sddkit/commit/f17ee2a50a79efce2536c54109f8413ebc6433f9))
