@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0 (2026-10-09)
+
+### Features
+
+* add Claude adapter and related skills to SDDKit ([3ce89c2](https://github.com/vinialves008/sddkit/commit/3ce89c2aee248daec8032f1708d4bc3deeca20a7))
+
+[//]: # (s-0.1.0)
+
+# [0.1.0] - (2026-10-09)
+
+[//]: # (e-0.1.0)
+
+
+
 ## 0.0.1 (2026-10-08)
 
 ### Bug Fixes
