@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 
 import { initVscode } from "../adapters/vscode/index.js";
+import { initClaude } from "../adapters/claude/index.js";
 
 export interface InitOptions {
   force?: boolean;
@@ -41,10 +42,20 @@ export function registerInitCommand(
             );
             break;
 
+          case "claude":
+            await initClaude(
+              projectRoot,
+              sddkitVersion,
+              {
+                force: options.force,
+              },
+            );
+            break;
+
           default:
             throw new Error(
               `Unknown adapter "${adapter}". ` +
-                `Available adapters: vscode`,
+                `Available adapters: vscode, claude`,
             );
         }
       },
